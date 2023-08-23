@@ -60,5 +60,7 @@ This section explains how to use the WhatsApp automation bot.
    ```
 
 ## License
-
 This project is licensed under the [MIT License](LICENSE). See the license file for details.
+
+## Issues, Feature Requests or Support
+Please use the [New Issue](https://github.com/akinbicer/whatsapp-automation/issues/new) button to submit issues, feature requests or support issues directly to me. You can also send an e-mail to akin.bicer@outlook.com.tr.
