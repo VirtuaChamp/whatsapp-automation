@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using WhatsAppAutomation.Models.Logs;
+//using WhatsAppAutomation.Models.Logs;
 
 namespace WhatsAppAutomation.Utilities.Helpers;
 
@@ -7,17 +7,17 @@ public class FileLogHelper
 {
     private const string LogDirectory = "./Logs";
 
-    public static async Task WriteLog(CustomLog log)
-    {
-        var path = Path.Combine(LogDirectory, "Customs", $"{DateTime.Now:yyyyMMdd}.log");
-        await WriteLogToFile(path, log);
-    }
+    //public static async Task WriteLog(CustomLog log)
+    //{
+    //    var path = Path.Combine(LogDirectory, "Customs", $"{DateTime.Now:yyyyMMdd}.log");
+    //    await WriteLogToFile(path, log);
+    //}
 
-    public static async Task WriteLog(ErrorLog log)
-    {
-        var path = Path.Combine(LogDirectory, "Errors", $"{DateTime.Now:yyyyMMdd}.log");
-        await WriteLogToFile(path, log);
-    }
+    //public static async Task WriteLog(ErrorLog log)
+    //{
+    //    var path = Path.Combine(LogDirectory, "Errors", $"{DateTime.Now:yyyyMMdd}.log");
+    //    await WriteLogToFile(path, log);
+    //}
 
     private static async Task WriteLogToFile(string path, object log)
     {
