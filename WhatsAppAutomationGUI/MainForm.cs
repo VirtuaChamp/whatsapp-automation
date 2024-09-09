@@ -25,6 +25,47 @@ namespace WhatsAppAutomationGUI
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     txtCsvFilePath.Text = openFileDialog.FileName;
+
+                    // Display one example of the formatted message
+                    DisplayMessagePreview(txtCsvFilePath.Text, txtMessageTemplate.Text);
+                }
+            }
+        }
+
+        private void DisplayMessagePreview(string csvFilePath, string template)
+        {
+            txtMessagePreview.Clear(); // Clear previous preview
+
+            if (string.IsNullOrWhiteSpace(csvFilePath) || !File.Exists(csvFilePath))
+            {
+                MessageBox.Show("Invalid CSV file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(template))
+            {
+                MessageBox.Show("Message template is empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (var reader = new StreamReader(csvFilePath))
+            {
+                string line = reader.ReadLine(); // Read only the first line
+                if (line != null)
+                {
+                    var values = line.Split(new[] { ',' }, 2); // Split into phone number and name
+                    if (values.Length == 2)
+                    {
+                        string phone = values[0].Trim();
+                        string name = values[1].Trim();
+
+                        // Replace placeholders in the template
+                        string message = template.Replace("{Name}", name)
+                                                 .Replace("\n", Environment.NewLine);
+
+                        // Display the formatted message in the TextBox
+                        txtMessagePreview.Text = message;
+                    }
                 }
             }
         }
@@ -32,13 +73,21 @@ namespace WhatsAppAutomationGUI
         private void btnSendMessages_Click(object sender, EventArgs e)
         {
             string csvFilePath = txtCsvFilePath.Text;
+            string customMessageTemplate = txtMessageTemplate.Text;
+
             if (string.IsNullOrWhiteSpace(csvFilePath) || !File.Exists(csvFilePath))
             {
                 MessageBox.Show("Please select a valid CSV file.", "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            var messageRequests = ReadCsvFile(csvFilePath);
+            if (string.IsNullOrWhiteSpace(customMessageTemplate))
+            {
+                MessageBox.Show("Please enter a message template.", "Invalid Template", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var messageRequests = ReadCsvFile(csvFilePath, customMessageTemplate);
             int totalMessages = messageRequests.Count;
             int successCount = 0;
             int errorCount = 0;
@@ -49,7 +98,6 @@ namespace WhatsAppAutomationGUI
 
             int currentMessageIndex = 0;
             string progressText = $"{currentMessageIndex}/{totalMessages}";
-            // Set initial progress text
             Text = $"WhatsApp Automation - Sending {progressText}";
 
             foreach (var messageRequest in messageRequests)
@@ -65,14 +113,11 @@ namespace WhatsAppAutomationGUI
                     errorCount++;
                     errorMessages.Add($"Error to {messageRequest.Phone}: {response.Exception.Message}");
                 }
-                // Update progress text
                 progressText = $"{currentMessageIndex}/{totalMessages}";
                 Text = $"WhatsApp Automation - Sending {progressText}";
 
-                // Update UI to show progress text
                 Refresh(); // Ensure the form updates visually
             }
-
 
             string summary = $"Messages sent successfully: {successCount}\n" +
                              $"Messages failed: {errorCount}\n";
@@ -86,7 +131,7 @@ namespace WhatsAppAutomationGUI
             _bot.Close();
         }
 
-        private List<MessageRequestModel> ReadCsvFile(string csvFilePath)
+        private List<MessageRequestModel> ReadCsvFile(string csvFilePath, string template)
         {
             var messageRequests = new List<MessageRequestModel>();
 
@@ -95,13 +140,20 @@ namespace WhatsAppAutomationGUI
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    var values = line.Split(new[] { ',' }, 2); // Split into two parts: phone number and message
+                    var values = line.Split(new[] { ',' }, 2); // Split into phone number and name
                     if (values.Length == 2)
                     {
+                        string phone = values[0].Trim();
+                        string name = values[1].Trim();
+
+                        // Replace placeholders in the template
+                        string message = template.Replace("{Name}", name)
+                                                 .Replace("\n", Environment.NewLine);
+
                         messageRequests.Add(new MessageRequestModel
                         {
-                            Phone = values[0].Trim(),
-                            Message = values[1].Trim().Replace("\\n", Environment.NewLine) // Replace \n with actual new lines
+                            Phone = phone,
+                            Message = message
                         });
                     }
                 }

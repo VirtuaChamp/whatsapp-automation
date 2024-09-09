@@ -4,8 +4,11 @@
     {
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.TextBox txtCsvFilePath;
+        private System.Windows.Forms.TextBox txtMessageTemplate;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Button btnSendMessages;
+        private System.Windows.Forms.RichTextBox txtMessagePreview;
+        private System.Windows.Forms.Button btnRefreshPreview;
 
         protected override void Dispose(bool disposing)
         {
@@ -18,48 +21,87 @@
 
         private void InitializeComponent()
         {
-            this.txtCsvFilePath = new System.Windows.Forms.TextBox();
-            this.btnBrowse = new System.Windows.Forms.Button();
-            this.btnSendMessages = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            txtCsvFilePath = new TextBox();
+            txtMessageTemplate = new TextBox();
+            btnBrowse = new Button();
+            btnSendMessages = new Button();
+            txtMessagePreview = new RichTextBox();
+            btnRefreshPreview = new Button();
+            SuspendLayout();
             // 
             // txtCsvFilePath
             // 
-            this.txtCsvFilePath.Location = new System.Drawing.Point(12, 12);
-            this.txtCsvFilePath.Name = "txtCsvFilePath";
-            this.txtCsvFilePath.Size = new System.Drawing.Size(358, 20);
-            this.txtCsvFilePath.TabIndex = 0;
+            txtCsvFilePath.Location = new Point(12, 12);
+            txtCsvFilePath.Name = "txtCsvFilePath";
+            txtCsvFilePath.Size = new Size(495, 23);
+            txtCsvFilePath.TabIndex = 0;
+            // 
+            // txtMessageTemplate
+            // 
+            txtMessageTemplate.Location = new Point(12, 38);
+            txtMessageTemplate.Multiline = true;
+            txtMessageTemplate.Name = "txtMessageTemplate";
+            txtMessageTemplate.Size = new Size(576, 246);
+            txtMessageTemplate.TabIndex = 1;
             // 
             // btnBrowse
             // 
-            this.btnBrowse.Location = new System.Drawing.Point(376, 10);
-            this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(75, 23);
-            this.btnBrowse.TabIndex = 1;
-            this.btnBrowse.Text = "Browse";
-            this.btnBrowse.UseVisualStyleBackColor = true;
-            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
+            btnBrowse.Location = new Point(513, 9);
+            btnBrowse.Name = "btnBrowse";
+            btnBrowse.Size = new Size(75, 23);
+            btnBrowse.TabIndex = 2;
+            btnBrowse.Text = "Browse";
+            btnBrowse.UseVisualStyleBackColor = true;
+            btnBrowse.Click += btnBrowse_Click;
             // 
             // btnSendMessages
             // 
-            this.btnSendMessages.Location = new System.Drawing.Point(12, 38);
-            this.btnSendMessages.Name = "btnSendMessages";
-            this.btnSendMessages.Size = new System.Drawing.Size(439, 23);
-            this.btnSendMessages.TabIndex = 2;
-            this.btnSendMessages.Text = "Send Messages";
-            this.btnSendMessages.UseVisualStyleBackColor = true;
-            this.btnSendMessages.Click += new System.EventHandler(this.btnSendMessages_Click);
+            btnSendMessages.Location = new Point(12, 631);
+            btnSendMessages.Name = "btnSendMessages";
+            btnSendMessages.Size = new Size(576, 23);
+            btnSendMessages.TabIndex = 3;
+            btnSendMessages.Text = "Send Messages";
+            btnSendMessages.UseVisualStyleBackColor = true;
+            btnSendMessages.Click += btnSendMessages_Click;
+            // 
+            // txtMessagePreview
+            // 
+            txtMessagePreview.Location = new Point(12, 319);
+            txtMessagePreview.Name = "txtMessagePreview";
+            txtMessagePreview.ReadOnly = true;
+            txtMessagePreview.Size = new Size(576, 306);
+            txtMessagePreview.TabIndex = 4;
+            txtMessagePreview.Text = "";
+            // 
+            // btnRefreshPreview
+            // 
+            btnRefreshPreview.Location = new Point(12, 290);
+            btnRefreshPreview.Name = "btnRefreshPreview";
+            btnRefreshPreview.Size = new Size(576, 23);
+            btnRefreshPreview.TabIndex = 5;
+            btnRefreshPreview.Text = "Refresh Preview";
+            btnRefreshPreview.UseVisualStyleBackColor = true;
+            btnRefreshPreview.Click += btnRefreshPreview_Click;
             // 
             // MainForm
             // 
-            this.ClientSize = new System.Drawing.Size(463, 73);
-            this.Controls.Add(this.btnSendMessages);
-            this.Controls.Add(this.btnBrowse);
-            this.Controls.Add(this.txtCsvFilePath);
-            this.Name = "MainForm";
-            this.Text = "WhatsApp Automation";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            ClientSize = new Size(600, 666);
+            Controls.Add(btnRefreshPreview);
+            Controls.Add(btnSendMessages);
+            Controls.Add(txtMessagePreview);
+            Controls.Add(btnBrowse);
+            Controls.Add(txtMessageTemplate);
+            Controls.Add(txtCsvFilePath);
+            Name = "MainForm";
+            Text = "WhatsApp Automation";
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        // Event handler for refreshing the message preview
+        private void btnRefreshPreview_Click(object sender, EventArgs e)
+        {
+            DisplayMessagePreview(txtCsvFilePath.Text, txtMessageTemplate.Text);
         }
     }
 }
